@@ -1,22 +1,16 @@
 version: 2
 jobs:
   build:
-    #docker:
-      #- image: circleci/python:3.7.0
+    docker:
+      - image: circleci/python:3.7.0
 
     working_directory: ~/workspace
-    machine: true
     steps:
         - checkout
 
-        #- setup_remote_docker:
-            #docker_layer_caching: false
+        - setup_remote_docker:
+            docker_layer_caching: false
             
-        - run:
-            name: dockerhub-login
-            command: |
-                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-
         - run:
               name: escape-git-branch
               command: |
@@ -43,6 +37,11 @@ jobs:
                 IMAGE=iktestdocker/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
                 docker build -t $IMAGE .
                 docker tag $IMAGE testservice:latest
+
+        - run:
+            name: dockerhub-login
+            command: |
+                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
         - run:
             name: push-testservice-docker
