@@ -10,10 +10,11 @@ jobs:
 
         - setup_remote_docker:
             docker_layer_caching: false
-        #- run:
-            #name: dockerhub-login
-            #command: |
-                #echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            
+        - run:
+            name: dockerhub-login
+            command: |
+                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
         - run:
               name: escape-git-branch
@@ -42,8 +43,8 @@ jobs:
                 docker build -t $IMAGE .
                 docker tag $IMAGE testservice:latest
 
-        #- run:
-            #name: push-testservice-docker
-            #command: |
-                #IMAGE=iktestdocker/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
-                #docker push $IMAGE
+        - run:
+            name: push-testservice-docker
+            command: |
+                IMAGE=iktestdocker/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
+                docker push $IMAGE
