@@ -13,6 +13,6 @@ test: install
 	(. $(ACTIVATE); python3 -m pytest --capture=sys -s tests/)
 
 docker:
-	docker build -t gluke77/testservice:latest -f Dockerfile .
+	docker build -t iktestdocker/testservice:latest -f Dockerfile .
 
 .PHONY: init test install docker

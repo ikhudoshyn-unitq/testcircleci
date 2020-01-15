@@ -36,12 +36,12 @@ jobs:
         - run:
             name: testservice-image
             command: |
-                IMAGE=gluke77/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
+                IMAGE=iktestdocker/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
                 docker build -t $IMAGE .
                 docker tag $IMAGE testservice:latest
 
         - run:
             name: push-testservice-docker
             command: |
-                IMAGE=gluke77/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
+                IMAGE=iktestdocker/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
                 docker push $IMAGE
