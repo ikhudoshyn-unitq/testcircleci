@@ -1,0 +1,11 @@
+.circle_ci
+.git
+.gitignore
+.idea
+.pytest_cache
+__pycache__
+build
+dist
+helm
+*.egg-info
+venv

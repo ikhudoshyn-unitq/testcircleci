@@ -1,0 +1,50 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.0
+
+    working_directory: ~/workspace
+    steps:
+        - checkout
+
+        - setup_remote_docker:
+                docker_layer_caching: true
+
+        - run:
+            name: dockerhub-login
+            command: |
+                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+        - run:
+              name: escape-git-branch
+              command: |
+                  echo 'export ESCAPED_BRANCH=$(echo $CIRCLE_BRANCH | sed 's,/,_,g')' >> $BASH_ENV
+
+        - run:
+            name: initialize
+            command: |
+                make init
+
+#        - run:
+#            name: lint
+#            command: |
+#                make lint
+
+        - run:
+            name: test
+            command: |
+                make test
+
+        - run:
+            name: testservice-image
+            command: |
+                IMAGE=gluke77/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
+                docker build -t $IMAGE .
+                docker tag $IMAGE testservice:latest
+
+        - run:
+            name: push-testservice-docker
+            command: |
+                IMAGE=gluke77/testservice:${CIRCLE_SHA1}--${ESCAPED_BRANCH}
+                docker push $IMAGE
